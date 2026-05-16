@@ -1,4 +1,4 @@
-import i18n from "i18next";
+import i18next from "i18next";
 import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import en from "../locales/en/translation.json";
@@ -15,7 +15,7 @@ function onLanguageChanged(lng) {
   syncDayjsLocale(lng);
 }
 
-i18n.on("languageChanged", onLanguageChanged);
+i18next.on("languageChanged", onLanguageChanged);
 
 const bundles = { en, hi };
 
@@ -24,7 +24,7 @@ for (const code of LANGUAGE_CODES) {
   resources[code] = { translation: bundles[code] };
 }
 
-i18n
+i18next
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
@@ -40,11 +40,11 @@ i18n
     },
   })
   .then(() => {
-    const normalized = normalizeLanguageCode(i18n.language);
-    void i18n.changeLanguage(normalized);
+    const normalized = normalizeLanguageCode(i18next.language);
+    void i18next.changeLanguage(normalized);
     applyDocumentLanguageAttributes(normalized);
     syncDayjsLocale(normalized);
   })
   .catch(() => {});
 
-export default i18n;
+export default i18next;

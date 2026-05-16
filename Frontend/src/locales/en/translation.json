@@ -45,7 +45,9 @@
     "haveAccount": "Already have an account?",
     "registerSuccess": "Account created — you can log in now",
     "registerFailed": "Registration failed",
-    "registerNetworkHint": "Can't reach the API. Set VITE_BACKEND_URL in .env and ensure the Spring Boot server is running (and Postgres is up)."
+    "registerNetworkHint": "Can't reach the API. Set VITE_BACKEND_URL in .env and ensure the Spring Boot server is running (and Postgres is up).",
+    "forgotPassword": "Forgot password?",
+    "orContinueWith": "Or continue with"
   },
   "footer": {
     "tagline": "Simplifying URL shortening for efficient sharing with real-time analytics.",
@@ -298,7 +300,8 @@
     }
   },
   "common": {
-    "close": "Close"
+    "close": "Close",
+    "backToHome": "Back to home"
   },
   "error": {
     "title": "Something went wrong",

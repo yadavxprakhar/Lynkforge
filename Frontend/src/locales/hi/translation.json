@@ -45,7 +45,9 @@
     "haveAccount": "पहले से खाता है?",
     "registerSuccess": "खाता बन गया — अब लॉग इन करें",
     "registerFailed": "पंजीकरण विफल",
-    "registerNetworkHint": "सर्वर तक नहीं पहुँच पा रहे। .env में VITE_BACKEND_URL सेट करें और सुनिश्चित करें कि Spring Boot (और Postgres) चल रहे हों।"
+    "registerNetworkHint": "सर्वर तक नहीं पहुँच पा रहे। .env में VITE_BACKEND_URL सेट करें और सुनिश्चित करें कि Spring Boot (और Postgres) चल रहे हों।",
+    "forgotPassword": "पासवर्ड भूल गए?",
+    "orContinueWith": "या इनके साथ जारी रखें"
   },
   "footer": {
     "tagline": "वास्तविक समय विश्लेषण के साथ URL छोटा करके साझा करना आसान बनाते हैं।",
@@ -296,5 +298,9 @@
         "body": "सरल, भरोसेमंद और पॉलिश। सेकंडों में बनाऊँ, कॉपी और साझा करूँ—और आँकड़े बताते हैं किस पर और ज़ोर देना है।"
       }
     }
+  },
+  "common": {
+    "close": "बंद करें",
+    "backToHome": "होम पेज पर वापस जाएं"
   }
 }
