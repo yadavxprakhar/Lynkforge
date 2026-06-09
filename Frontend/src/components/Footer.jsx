@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { easeSmooth } from "../utils/motionVariants";
-import { LightChromeFrost } from "./LightChromeStack";
+import { LightChromeAmbient, LightChromeFrost } from "./LightChromeStack";
 import { useStoreContext } from "../contextApi/ContextApi";
 import LanguageSwitcher from "./LanguageSwitcher";
 
@@ -35,13 +35,13 @@ function LinkedInIcon({ className }) {
 }
 
 const mutedLink =
-  "text-[0.8125rem] font-medium text-slate-600 transition-colors hover:text-[#a06a42] dark:text-[#94a3b8] dark:hover:text-[#e8c09d]";
+  "text-[0.8125rem] font-medium text-slate-600 transition-colors hover:text-[#2563eb] dark:text-[#94a3b8] dark:hover:text-[#cbd5f5]";
 
 const sectionHeading =
-  "text-xs font-bold uppercase tracking-[0.12em] text-[#3d2719] dark:text-[#fcfaf7]";
+  "text-xs font-bold uppercase tracking-[0.12em] text-[#0f172a] dark:text-[#f8fafc]";
 
 const iconBtnClasses =
-  "flex size-10 items-center justify-center rounded-lg border border-transparent text-[#475569] transition-all duration-200 hover:border-white/12 hover:bg-white/[0.06] hover:text-[#a06a42] dark:text-[#94a3b8] dark:hover:text-[#e8c09d]";
+  "flex size-10 items-center justify-center rounded-lg border border-transparent text-[#475569] transition-all duration-200 hover:border-white/12 hover:bg-white/[0.06] hover:text-[#2563eb] dark:text-[#94a3b8] dark:hover:text-[#cbd5f5]";
 
 const Footer = () => {
   const { t } = useTranslation();
@@ -89,16 +89,13 @@ const Footer = () => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-20px 0px" }}
       transition={{ duration: 0.45, ease: easeSmooth }}
-      className="relative z-[1] mt-auto overflow-hidden border-t border-[#e3d5bf] bg-transparent shadow-[inset_0_1px_0_rgb(255_255_255/_0.82),0_-20px_50px_-40px_rgb(160_106_66/_0.12)] motion-safe:transition-[border-color,box-shadow,color] motion-safe:duration-[480ms] dark:border-[#2e1d15] dark:bg-[#150c08] dark:shadow-none"
+      className="relative z-[1] mt-auto overflow-hidden border-t border-[#e2e8f0] bg-transparent shadow-[inset_0_1px_0_rgb(255_255_255/_0.82),0_-20px_50px_-40px_rgb(37_99_235/_0.08)] motion-safe:transition-[border-color,box-shadow,color] motion-safe:duration-[480ms] dark:border-white/[0.08] dark:bg-[#090e18] dark:shadow-none"
     >
-      {/* Light mode coffee gradient background */}
-      <div className="absolute inset-0 z-0 bg-gradient-to-b from-[#fcfaf7] via-[#f6f0e4] to-[#eae0cc] dark:hidden" />
-      <LightChromeFrost className="bg-gradient-to-b from-white/[0.3] via-transparent to-transparent backdrop-blur-md dark:hidden" />
-      
-      {/* Dark mode coffee gradient background */}
+      <LightChromeAmbient />
+      <LightChromeFrost className="bg-gradient-to-b from-white/[0.72] via-[#f8fafc]/82 to-[#eef2f9]/92 backdrop-blur-md dark:hidden" />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 z-[1] hidden bg-gradient-to-b from-[#190f0a]/90 to-[#0e0704] dark:block"
+        className="pointer-events-none absolute inset-0 z-[1] hidden bg-gradient-to-b from-[#070b14]/80 to-[#070b14] dark:block"
       />
 
       <div className="relative z-[2] lx-footer-inner">
@@ -115,7 +112,7 @@ const Footer = () => {
                 width={44}
                 height={44}
               />
-              <span className="bg-gradient-to-r from-[#a06a42] to-[#6d4023] bg-clip-text text-lg font-bold tracking-tight text-transparent dark:from-[#e8c09d] dark:to-[#c68e65]">
+              <span className="bg-gradient-to-r from-[#2563eb] to-[#7c3aed] bg-clip-text text-lg font-bold tracking-tight text-transparent dark:from-[#60a5fa] dark:to-[#a78bfa]">
                 Lynkforge
               </span>
             </Link>
@@ -196,8 +193,8 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-14 border-t border-[#e3d5bf] pt-8 text-center dark:border-[#2e1d15]">
-          <p className="text-sm text-slate-500 dark:text-[#94a3b8]/70">
+        <div className="mt-14 border-t border-[#cbd5e1]/90 pt-8 text-center dark:border-white/[0.08]">
+          <p className="text-sm text-slate-500 dark:text-[#64748b]">
             {t("footer.copyright", { year: 2026 })}
           </p>
         </div>
