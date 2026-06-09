@@ -6,14 +6,23 @@ const defaultIconShell =
 
 /** Feature tile — optional icon + tinted well (stroke inherits `text-*` / `stroke-current`) */
 const Card = ({ title, desc, Icon, iconShell }) => {
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    e.currentTarget.style.setProperty("--mouse-x", `${x}px`);
+    e.currentTarget.style.setProperty("--mouse-y", `${y}px`);
+  };
+
   return (
     <motion.div
       variants={staggerChild}
+      onMouseMove={handleMouseMove}
       whileHover={{
         y: -4,
         transition: cardHoverSpring,
       }}
-      className="group relative flex cursor-default flex-col gap-4 rounded-2xl border border-slate-200 bg-white px-6 py-8 shadow-soft transition-colors duration-300 dark:border-white/[0.1] dark:bg-[rgb(21_31_53)] dark:shadow-[inset_0_1px_0_rgb(255_255_255_/_0.04)] dark:hover:border-blue-500/35 dark:after:absolute dark:after:inset-0 dark:after:-z-[1] dark:after:rounded-2xl dark:after:opacity-0 dark:after:blur-2xl dark:after:transition-opacity dark:after:duration-300 dark:after:bg-[radial-gradient(ellipse_90%_80%_at_50%_0%,rgb(99_102_241_/_0.18)_0%,transparent_62%)] dark:hover:after:opacity-100"
+      className="lx-glow-card group relative flex cursor-default flex-col gap-4 px-6 py-8"
     >
       {Icon ? (
         <div className={(iconShell ?? defaultIconShell).trim()} role="presentation">

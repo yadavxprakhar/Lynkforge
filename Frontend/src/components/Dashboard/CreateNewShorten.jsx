@@ -53,7 +53,7 @@ const CreateNewShorten = ({ setOpen, refetch: _refetch }) => {
   return (
     <motion.div
       {...fadeUpMountProps(0.04)}
-      className="lx-card w-full max-w-[440px] shadow-lifted"
+      className="lx-glass-card w-full max-w-[440px] shadow-lifted"
     >
       <form
         onSubmit={handleSubmit(createShortUrlHandler)}

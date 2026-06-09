@@ -9,6 +9,7 @@ export default {
       },
       fontFamily: {
         sans: ["Inter", "system-ui", "-apple-system", "sans-serif"],
+        display: ["Inter Tight", "sans-serif"],
       },
       colors: {
         lx: {

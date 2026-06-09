@@ -24,13 +24,21 @@ const FaqSection = () => {
     setOpenIndex((prev) => (prev === index ? null : index));
   };
 
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    e.currentTarget.style.setProperty("--mouse-x", `${x}px`);
+    e.currentTarget.style.setProperty("--mouse-y", `${y}px`);
+  };
+
   return (
     <section
       id="faq"
       aria-labelledby="faq-heading"
       className="mt-24 pb-6 sm:mt-28 sm:pb-10"
     >
-      <div className="mx-auto max-w-5xl px-6 lg:px-8">
+      <div className="mx-auto max-w-6xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl text-center">
           <motion.h2
             id="faq-heading"
@@ -65,7 +73,8 @@ const FaqSection = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-30px 0px" }}
                 transition={{ duration: 0.4, delay: index * 0.03, ease: easeSmooth }}
-                className="rounded-2xl border border-slate-200 bg-white shadow-soft dark:border-white/[0.1] dark:bg-[rgb(21_31_53_/_0.85)]"
+                onMouseMove={handleMouseMove}
+                className="lx-glow-card"
               >
                 <button
                   type="button"
@@ -76,7 +85,7 @@ const FaqSection = () => {
                   className="flex w-full items-start gap-3 rounded-2xl px-4 py-4 text-left sm:px-5 sm:py-5"
                 >
                   <span
-                    className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-[#2563eb] dark:border-white/[0.12] dark:bg-slate-950/50 dark:text-[#60a5fa]"
+                    className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-full border border-blue-500/20 bg-blue-500/10 text-blue-600 dark:border-blue-400/20 dark:bg-blue-950/40 dark:text-[#60a5fa]"
                     aria-hidden
                   >
                     <HelpCircle className="size-[1.125rem]" strokeWidth={2} />
@@ -87,14 +96,20 @@ const FaqSection = () => {
                     </span>
                   </span>
                   <span
-                    className="mt-1 flex size-8 shrink-0 items-center justify-center rounded-lg border border-slate-200 text-slate-500 transition-colors dark:border-white/[0.12] dark:text-[#94a3b8]"
+                    className="mt-1 flex size-8 shrink-0 items-center justify-center rounded-lg border border-slate-200/60 bg-white/50 text-slate-500 transition-colors dark:border-white/[0.1] dark:bg-slate-900/40 dark:text-[#94a3b8]"
                     aria-hidden
                   >
-                    {isOpen ? (
-                      <Minus className="size-4" strokeWidth={2} />
-                    ) : (
-                      <Plus className="size-4" strokeWidth={2} />
-                    )}
+                    <motion.span
+                      animate={{ rotate: isOpen ? 180 : 0 }}
+                      transition={{ type: "spring", stiffness: 350, damping: 22 }}
+                      className="flex items-center justify-center"
+                    >
+                      {isOpen ? (
+                        <Minus className="size-4" strokeWidth={2} />
+                      ) : (
+                        <Plus className="size-4" strokeWidth={2} />
+                      )}
+                    </motion.span>
                   </span>
                 </button>
                 <AnimatePresence initial={false}>
@@ -114,38 +129,38 @@ const FaqSection = () => {
                         {index === FAQ_KEYS.length - 1 ? (
                           <span className="mt-2 block">
                             <Link
-                              to="/privacy"
-                              className="font-semibold text-[#2563eb] underline-offset-2 hover:underline dark:text-[#60a5fa]"
-                            >
-                              {t("footer.privacyPolicy")}
-                            </Link>
-                            <span aria-hidden>, </span>
-                            <Link
-                              to="/terms"
-                              className="font-semibold text-[#2563eb] underline-offset-2 hover:underline dark:text-[#60a5fa]"
-                            >
-                              {t("footer.termsOfService")}
-                            </Link>
-                            <span aria-hidden>, </span>
-                            <Link
-                              to="/cookie"
-                              className="font-semibold text-[#2563eb] underline-offset-2 hover:underline dark:text-[#60a5fa]"
-                            >
-                              {t("footer.cookiePolicy")}
-                            </Link>
-                          </span>
-                        ) : null}
-                      </div>
-                    </motion.div>
-                  ) : null}
-                </AnimatePresence>
-              </motion.div>
-            );
-          })}
+                                to="/privacy"
+                                className="font-semibold text-[#2563eb] underline-offset-2 hover:underline dark:text-[#60a5fa]"
+                              >
+                                {t("footer.privacyPolicy")}
+                              </Link>
+                              <span aria-hidden>, </span>
+                              <Link
+                                to="/terms"
+                                className="font-semibold text-[#2563eb] underline-offset-2 hover:underline dark:text-[#60a5fa]"
+                              >
+                                {t("footer.termsOfService")}
+                              </Link>
+                              <span aria-hidden>, </span>
+                              <Link
+                                to="/cookie"
+                                className="font-semibold text-[#2563eb] underline-offset-2 hover:underline dark:text-[#60a5fa]"
+                              >
+                                {t("footer.cookiePolicy")}
+                              </Link>
+                            </span>
+                          ) : null}
+                        </div>
+                      </motion.div>
+                    ) : null}
+                  </AnimatePresence>
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
-      </div>
-    </section>
-  );
-};
+      </section>
+    );
+  };
 
 export default FaqSection;

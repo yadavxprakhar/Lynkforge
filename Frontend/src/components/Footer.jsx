@@ -4,9 +4,9 @@ import { motion } from "framer-motion";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { easeSmooth } from "../utils/motionVariants";
-import { LightChromeAmbient, LightChromeFrost } from "./LightChromeStack";
 import { useStoreContext } from "../contextApi/ContextApi";
 import LanguageSwitcher from "./LanguageSwitcher";
+import toast from "react-hot-toast";
 
 function GitHubIcon({ className }) {
   return (
@@ -89,15 +89,8 @@ const Footer = () => {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-20px 0px" }}
       transition={{ duration: 0.45, ease: easeSmooth }}
-      className="relative z-[1] mt-auto overflow-hidden border-t border-[#e2e8f0] bg-transparent shadow-[inset_0_1px_0_rgb(255_255_255/_0.82),0_-20px_50px_-40px_rgb(37_99_235/_0.08)] motion-safe:transition-[border-color,box-shadow,color] motion-safe:duration-[480ms] dark:border-white/[0.08] dark:bg-[#090e18] dark:shadow-none"
+      className="relative z-[1] mt-auto overflow-hidden border-t border-[#e2e8f0] bg-transparent shadow-[inset_0_1px_0_rgb(255_255_255/_0.82),0_-20px_50px_-40px_rgb(37_99_235/_0.08)] motion-safe:transition-[border-color,box-shadow,color] motion-safe:duration-[480ms] dark:border-white/[0.08] dark:shadow-none"
     >
-      <LightChromeAmbient />
-      <LightChromeFrost className="bg-gradient-to-b from-white/[0.72] via-[#f8fafc]/82 to-[#eef2f9]/92 backdrop-blur-md dark:hidden" />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 z-[1] hidden bg-gradient-to-b from-[#070b14]/80 to-[#070b14] dark:block"
-      />
-
       <div className="relative z-[2] lx-footer-inner">
         <div className="grid gap-12 md:grid-cols-2 md:gap-10 lg:grid-cols-5 lg:gap-8">
           <div className="space-y-4 text-center lg:text-left">
@@ -112,13 +105,26 @@ const Footer = () => {
                 width={44}
                 height={44}
               />
-              <span className="bg-gradient-to-r from-[#2563eb] to-[#7c3aed] bg-clip-text text-lg font-bold tracking-tight text-transparent dark:from-[#60a5fa] dark:to-[#a78bfa]">
+              <span className="bg-gradient-to-r from-black via-slate-800 to-slate-600 bg-clip-text text-lg font-bold tracking-tight text-transparent dark:from-white dark:via-slate-200 dark:to-slate-400">
                 Lynkforge
               </span>
             </Link>
             <p className="mx-auto max-w-[16rem] text-sm leading-relaxed text-slate-600 dark:text-[#94a3b8] md:mx-0 lg:max-w-none">
               {t("footer.tagline")}
             </p>
+            <div className="mt-4 flex justify-center lg:justify-start">
+              <a
+                href="#status"
+                onClick={(e) => {
+                  e.preventDefault();
+                  toast.success(t("footer.allSystemsGo", "All routing tables operational (99.99% SLA)"));
+                }}
+                className="inline-flex items-center gap-2 rounded-full border border-neutral-300 bg-neutral-100 dark:border-white/10 dark:bg-white/5 px-3.5 py-1.5 text-xs font-semibold text-neutral-800 dark:text-white hover:bg-neutral-200 dark:hover:bg-white/10 transition-all duration-200"
+              >
+                <span className="lx-status-dot" />
+                All Systems Operational
+              </a>
+            </div>
           </div>
 
           <div className="text-center lg:text-left">

@@ -11,7 +11,7 @@ const AmbientDarkBackground = () => {
     return (
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 -z-[1] min-h-full w-full bg-[radial-gradient(ellipse_110%_80%_at_50%_-20%,#312e8133_0%,#050a14_48%,#050a14_100%)]"
+        className="pointer-events-none absolute inset-0 -z-[1] min-h-full w-full bg-[radial-gradient(ellipse_110%_80%_at_50%_-20%,#312e8133_0%,#0B1020_48%,#0B1020_100%)]"
       />
     );
   }
@@ -40,7 +40,7 @@ const AmbientDarkBackground = () => {
       className="pointer-events-none absolute inset-0 -z-[1] min-h-full w-full overflow-hidden"
     >
       {/* Solid base */}
-      <div className="absolute inset-0 bg-[#050a14]" />
+      <div className="absolute inset-0 bg-[#0B1020]" />
 
       {/* Starfield */}
       <div className="lx-starfield absolute inset-0 opacity-[0.35]" />
@@ -52,7 +52,7 @@ const AmbientDarkBackground = () => {
       <div className="lx-hero-beams absolute inset-0 opacity-[0.55]" />
 
       {/* Soft vignette so content stays readable */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_100%_100%_at_50%_120%,transparent_35%,#050a1488_82%,#050a14ee_100%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_100%_100%_at_50%_120%,transparent_35%,#0B102088_82%,#0B1020ee_100%)]" />
 
       {/* Primary orb — cobalt / indigo */}
       <motion.div

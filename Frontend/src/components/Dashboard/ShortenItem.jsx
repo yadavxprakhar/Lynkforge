@@ -106,7 +106,7 @@ const ShortenItem = ({
   return (
     <motion.div
       layout={false}
-      className="lx-card overflow-hidden"
+      className="lx-glass-card overflow-hidden"
       transition={cardHoverSpring}
       whileHover={reduceMotion ? undefined : { y: -2 }}
     >

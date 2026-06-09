@@ -1,9 +1,10 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Bar } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
-  BarElement,
+  LineElement,
+  PointElement,
   CategoryScale,
   LinearScale,
   Legend,
@@ -14,7 +15,8 @@ import { useStoreContext } from "../../contextApi/ContextApi";
 import dayjs from "dayjs";
 
 ChartJS.register(
-  BarElement,
+  LineElement,
+  PointElement,
   Tooltip,
   CategoryScale,
   LinearScale,
@@ -29,7 +31,7 @@ const Graph = ({ graphData: graphDataProp }) => {
   const { t, i18n } = useTranslation();
   const { theme } = useStoreContext();
   const isDark = theme === "dark";
-  const graphData = Array.isArray(graphDataProp) ? graphDataProp : [];
+  const graphData = useMemo(() => Array.isArray(graphDataProp) ? graphDataProp : [], [graphDataProp]);
 
   const labels = useMemo(() => graphData.map((item) => `${item.clickDate}`), [graphData]);
   const userPerDaya = useMemo(() => graphData.map((item) => item.count), [graphData]);
@@ -48,22 +50,32 @@ const Graph = ({ graphData: graphDataProp }) => {
         {
           label: t("chart.datasetLabel"),
           data: graphData.length > 0 ? userPerDaya : [1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1],
-          backgroundColor:
-            graphData.length > 0
-              ? isDark
-                ? "#60a5fa"
-                : "#2563eb"
-              : isDark
-                ? "rgba(96, 165, 250, 0.12)"
-                : "rgba(37, 99, 235, 0.08)",
-          borderRadius: 6,
-          borderSkipped: false,
-          borderColor: "transparent",
+          borderColor: isDark ? "#60a5fa" : "#2563eb",
+          borderWidth: 2.5,
+          pointBackgroundColor: isDark ? "#60a5fa" : "#2563eb",
+          pointBorderColor: isDark ? "#0a0f1d" : "#ffffff",
+          pointBorderWidth: 2,
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          pointHoverBackgroundColor: isDark ? "#60a5fa" : "#2563eb",
+          pointHoverBorderWidth: 2,
+          pointHoverBorderColor: "#ffffff",
           fill: true,
+          backgroundColor: (context) => {
+            const chart = context.chart;
+            const { ctx, chartArea } = chart;
+            if (!chartArea) return null;
+            const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+            if (isDark) {
+              gradient.addColorStop(0, "rgba(96, 165, 250, 0.22)");
+              gradient.addColorStop(1, "rgba(59, 130, 246, 0.00)");
+            } else {
+              gradient.addColorStop(0, "rgba(37, 99, 235, 0.15)");
+              gradient.addColorStop(1, "rgba(37, 99, 235, 0.00)");
+            }
+            return gradient;
+          },
           tension: 0.4,
-          barThickness: 20,
-          categoryPercentage: 1.5,
-          barPercentage: 1.5,
         },
       ],
     }),
@@ -172,7 +184,7 @@ const Graph = ({ graphData: graphDataProp }) => {
     ]
   );
 
-  return <Bar className="h-full min-h-[280px] w-full" data={data} options={options} />;
+  return <Line className="h-full min-h-[280px] w-full" data={data} options={options} />;
 };
 
 export default Graph;

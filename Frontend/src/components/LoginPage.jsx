@@ -9,8 +9,6 @@ import { useTranslation } from "react-i18next";
 import { useStoreContext } from "../contextApi/ContextApi";
 import { fadeUpMountProps, tapScale } from "../utils/motionVariants";
 import { extractApiErrorMessage } from "../utils/apiError";
-import AmbientDarkBackground from "./AmbientDarkBackground";
-import AmbientLightBackground from "./AmbientLightBackground";
 import { ArrowLeft, CheckCircle2 } from "lucide-react";
 
 // Inline SVG — lucide-react installed version doesn't export Github
@@ -27,8 +25,7 @@ const LoginPage = () => {
   const { t } = useTranslation();
   const [loader, setLoader] = useState(false);
   const submitLock = useRef(false);
-  const { setToken, theme } = useStoreContext();
-  const isDark = theme === "dark";
+  const { setToken } = useStoreContext();
 
   const {
     register,
@@ -75,10 +72,7 @@ const LoginPage = () => {
 
   return (
     <div className="relative flex min-h-screen w-full flex-col overflow-hidden lg:flex-row">
-      {/* Background Layer */}
-      <div className="absolute inset-0 -z-10">
-        {isDark ? <AmbientDarkBackground /> : <AmbientLightBackground />}
-      </div>
+
 
       {/* Left Column: Branding / Marketing (Visible on Desktop) */}
       <div className="relative hidden w-full flex-col justify-between overflow-hidden p-12 lg:flex lg:w-1/2 xl:p-16">
@@ -201,7 +195,7 @@ const LoginPage = () => {
             </motion.div>
           </div>
 
-          <motion.div {...fadeUpMountProps(0.12)} className="lx-card p-8 sm:p-10">
+          <motion.div {...fadeUpMountProps(0.12)} className="lx-glass-card p-8 sm:p-10">
             <form onSubmit={handleSubmit(loginHandler)} className="space-y-6">
               <TextField
                 label={t("auth.username")}

@@ -18,7 +18,7 @@ const ErrorPage = ({ message, variant = "generic" }) => {
     <div className="lx-error-shell">
       <motion.div
         {...fadeUpMountProps(0.06)}
-        className="lx-card flex flex-col items-center gap-8 px-10 py-14 sm:max-w-lg sm:p-16"
+        className="lx-glass-card flex flex-col items-center gap-8 px-10 py-14 sm:max-w-lg sm:p-16"
       >
         <div className="flex size-16 items-center justify-center rounded-2xl bg-red-500/11 text-red-600 shadow-md shadow-red-900/[0.06] ring-1 ring-red-900/[0.04] dark:text-red-400 dark:shadow-none dark:ring-0">
           <AlertTriangle className="size-9" aria-hidden />

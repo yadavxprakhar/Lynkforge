@@ -18,8 +18,7 @@ import PrivateRoute from "./PrivateRoute";
 import ErrorPage from "./components/ErrorPage";
 import { useStoreContext } from "./contextApi/ContextApi";
 import PageFade from "./components/PageFade";
-import AmbientDarkBackground from "./components/AmbientDarkBackground";
-import AmbientLightBackground from "./components/AmbientLightBackground";
+import FluidMotionBackground from "./components/FluidMotionBackground";
 
 const shellSurface = (dark) =>
   dark
@@ -44,7 +43,7 @@ const AppRouter = () => {
 
   return (
     <div className={shellSurface(isDark)}>
-      {isDark ? <AmbientDarkBackground /> : <AmbientLightBackground />}
+      <FluidMotionBackground />
       {!hideHeaderFooter && (
         <>
           <Navbar />
@@ -201,7 +200,7 @@ export const SubDomainRouter = () => {
 
   return (
     <div className={shellSurface(isDark)}>
-      {isDark ? <AmbientDarkBackground /> : <AmbientLightBackground />}
+      <FluidMotionBackground />
       <div className="relative z-[1] flex min-h-screen flex-col">
         <Routes>
           <Route path="/:url" element={<ShortenUrlPage />} />

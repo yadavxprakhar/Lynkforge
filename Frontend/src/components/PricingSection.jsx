@@ -57,7 +57,7 @@ function usePlans(t) {
           { label: t("pricing.plan.pro.feat8"), included: false },
         ],
         tone:
-          "border-blue-500/30 bg-white/95 ring-1 ring-blue-500/15 shadow-[0_22px_60px_-40px_rgb(37_99_235_/_0.35)] dark:border-blue-500/35 dark:bg-[rgb(18_26_46)] dark:ring-blue-400/15",
+          "border-black bg-white ring-1 ring-black/10 shadow-[0_22px_60px_-40px_rgba(255,255,255,0.06)] dark:border-white dark:bg-neutral-900 dark:ring-white/10",
         cta: t("pricing.plan.pro.cta"),
         featured: true,
       },
@@ -76,7 +76,7 @@ function usePlans(t) {
           { label: t("pricing.plan.business.feat8"), included: true },
         ],
         tone:
-          "border-slate-200 bg-white/95 dark:border-white/[0.1] dark:bg-[rgb(21_31_53)]",
+          "border-slate-200 bg-white/95 dark:border-white/[0.1] dark:bg-[#0A0A0A]",
         cta: t("pricing.plan.business.cta"),
       },
     ],
@@ -113,19 +113,30 @@ function computePrice(planPrice, billing, currency, t, localeTag) {
 function PlanCard({ plan, onClick, billing, currency, localeTag }) {
   const { t } = useTranslation();
   const price = computePrice(plan.price, billing, currency, t, localeTag);
+
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    e.currentTarget.style.setProperty("--mouse-x", `${x}px`);
+    e.currentTarget.style.setProperty("--mouse-y", `${y}px`);
+  };
+
+  const cardStyle = plan.featured
+    ? "border-black bg-white dark:border-white dark:bg-neutral-900 ring-2 ring-black/10 shadow-[0_22px_60px_-40px_rgba(0,0,0,0.2)] dark:ring-white/10"
+    : "";
+
   return (
     <motion.div
+      onMouseMove={handleMouseMove}
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px 0px" }}
       transition={{ duration: 0.45, ease: easeSmooth }}
-      className={[
-        "relative flex h-full flex-col gap-6 rounded-2xl border p-6 shadow-soft",
-        plan.tone,
-      ].join(" ")}
+      className={`lx-glow-card relative flex h-full flex-col gap-6 p-6 ${cardStyle}`}
     >
       {plan.featured ? (
-        <div className="absolute -top-3 left-6 rounded-full border border-blue-500/30 bg-blue-500/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-blue-600 dark:border-blue-400/30 dark:bg-blue-500/14 dark:text-blue-300">
+        <div className="absolute -top-3 left-6 rounded-full border border-black/35 bg-black/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-black dark:border-white/35 dark:bg-white/10 dark:text-white">
           {t("pricing.mostPopular")}
         </div>
       ) : null}
@@ -163,8 +174,8 @@ function PlanCard({ plan, onClick, billing, currency, localeTag }) {
               className={[
                 "mt-0.5 inline-flex size-5 items-center justify-center rounded-md border",
                 included
-                  ? "border-slate-200 bg-slate-50 text-slate-900 dark:border-white/[0.12] dark:bg-slate-950/55 dark:text-[#e2e8f0]"
-                  : "border-slate-200/70 bg-transparent text-slate-400 dark:border-white/[0.08] dark:text-[#475569]",
+                  ? "border-neutral-200/40 bg-neutral-50/50 text-neutral-800 dark:border-white/10 dark:bg-white/5 dark:text-white"
+                  : "border-slate-200/40 bg-transparent text-slate-400 dark:border-white/[0.06] dark:text-slate-600",
               ].join(" ")}
               aria-hidden
             >
@@ -289,72 +300,93 @@ const PricingSection = () => {
         >
           {t("pricing.subtitle")}
         </motion.p>
-      </div>
-
-      <motion.div
+      </div>      <motion.div
         initial={{ opacity: 0, y: 12 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-40px 0px" }}
         transition={{ duration: 0.45, ease: easeSmooth }}
-        className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row sm:justify-center sm:gap-6"
+        className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row sm:justify-center"
       >
-        <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white/90 px-4 py-3 shadow-soft dark:border-white/[0.12] dark:bg-slate-950/20">
-          <span
-            className={[
-              "text-sm font-semibold",
+        {/* Billing segmented slider */}
+        <div className="relative flex items-center p-1 rounded-xl bg-slate-200/50 dark:bg-slate-900/50 border border-slate-200/30 dark:border-white/[0.04]">
+          <button
+            type="button"
+            onClick={() => setBilling("monthly")}
+            className={`relative z-10 px-4 py-1.5 text-xs font-semibold rounded-lg transition-colors duration-200 ${
               billing === "monthly"
-                ? "text-slate-900 dark:text-[#f8fafc]"
-                : "text-slate-500 dark:text-[#94a3b8]",
-            ].join(" ")}
+                ? "text-slate-900 dark:text-white"
+                : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+            }`}
           >
             {t("pricing.monthly")}
-          </span>
+            {billing === "monthly" && (
+              <motion.span
+                layoutId="billing-toggle-pill"
+                className="absolute inset-0 z-[-1] rounded-lg bg-white dark:bg-slate-800 shadow-sm"
+                transition={{ type: "spring", stiffness: 380, damping: 30 }}
+              />
+            )}
+          </button>
           <button
             type="button"
-            aria-label={t("pricing.billingToggle")}
-            aria-pressed={billing === "annual"}
-            onClick={() => setBilling((b) => (b === "monthly" ? "annual" : "monthly"))}
-            className={[
-              "relative h-8 w-14 rounded-full border transition-colors duration-200",
+            onClick={() => setBilling("annual")}
+            className={`relative z-10 px-4 py-1.5 text-xs font-semibold rounded-lg transition-colors duration-200 flex items-center gap-1.5 ${
               billing === "annual"
-                ? "border-emerald-500/30 bg-emerald-500/25"
-                : "border-slate-300 bg-slate-200/80 dark:border-white/[0.14] dark:bg-white/[0.06]",
-            ].join(" ")}
-          >
-            <span
-              aria-hidden
-              className={[
-                "absolute top-1/2 left-0.5 size-6 -translate-y-1/2 rounded-full bg-white shadow-sm ring-1 ring-black/5 transition-[transform] duration-200",
-                billing === "annual" ? "translate-x-6" : "translate-x-0",
-                "dark:bg-[#e2e8f0] dark:ring-white/10",
-              ].join(" ")}
-            />
-          </button>
-          <span
-            className={[
-              "text-sm font-semibold",
-              billing === "annual"
-                ? "text-slate-900 dark:text-[#f8fafc]"
-                : "text-slate-500 dark:text-[#94a3b8]",
-            ].join(" ")}
+                ? "text-slate-900 dark:text-white"
+                : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+            }`}
           >
             {t("pricing.annual")}
-          </span>
-          <span className="rounded-full bg-emerald-500/15 px-3 py-1 text-xs font-bold tracking-wide text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300">
-            {t("pricing.savePct")}
-          </span>
+            <span className="rounded-full bg-black/10 dark:bg-white/10 px-1.5 py-0.5 text-[10px] font-bold text-black dark:text-white">
+              {t("pricing.savePct")}
+            </span>
+            {billing === "annual" && (
+              <motion.span
+                layoutId="billing-toggle-pill"
+                className="absolute inset-0 z-[-1] rounded-lg bg-white dark:bg-slate-800 shadow-sm"
+                transition={{ type: "spring", stiffness: 380, damping: 30 }}
+              />
+            )}
+          </button>
         </div>
 
-        <div className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white/90 px-4 py-3 shadow-soft dark:border-white/[0.12] dark:bg-slate-950/20">
-          <span className="text-sm font-semibold text-slate-900 dark:text-[#f8fafc]">
-            {currency}
-          </span>
+        {/* Currency segmented slider */}
+        <div className="relative flex items-center p-1 rounded-xl bg-slate-200/50 dark:bg-slate-900/50 border border-slate-200/30 dark:border-white/[0.04]">
           <button
             type="button"
-            onClick={() => setCurrency((c) => (c === "INR" ? "USD" : "INR"))}
-            className="rounded-lg border border-slate-200 bg-white/80 px-2 py-1 text-xs font-semibold text-slate-600 transition hover:bg-white dark:border-white/[0.12] dark:bg-white/[0.06] dark:text-[#94a3b8] dark:hover:bg-white/[0.10]"
+            onClick={() => setCurrency("INR")}
+            className={`relative z-10 px-4 py-1.5 text-xs font-semibold rounded-lg transition-colors duration-200 ${
+              currency === "INR"
+                ? "text-slate-900 dark:text-white"
+                : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+            }`}
           >
-            {t("pricing.switchCurrency")}
+            INR
+            {currency === "INR" && (
+              <motion.span
+                layoutId="currency-toggle-pill"
+                className="absolute inset-0 z-[-1] rounded-lg bg-white dark:bg-slate-800 shadow-sm"
+                transition={{ type: "spring", stiffness: 380, damping: 30 }}
+              />
+            )}
+          </button>
+          <button
+            type="button"
+            onClick={() => setCurrency("USD")}
+            className={`relative z-10 px-4 py-1.5 text-xs font-semibold rounded-lg transition-colors duration-200 ${
+              currency === "USD"
+                ? "text-slate-900 dark:text-white"
+                : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
+            }`}
+          >
+            USD
+            {currency === "USD" && (
+              <motion.span
+                layoutId="currency-toggle-pill"
+                className="absolute inset-0 z-[-1] rounded-lg bg-white dark:bg-slate-800 shadow-sm"
+                transition={{ type: "spring", stiffness: 380, damping: 30 }}
+              />
+            )}
           </button>
         </div>
       </motion.div>
@@ -375,27 +407,27 @@ const PricingSection = () => {
         ))}
       </div>
 
-      {/* Inspired CTA panel (starry gradient like reference) */}
+      {/* Inspired CTA panel (glassmorphic gradient like reference) */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-60px 0px" }}
         transition={{ duration: 0.5, ease: easeSmooth }}
-        className="relative mt-24 overflow-hidden rounded-3xl border border-white/[0.08] bg-[radial-gradient(ellipse_140%_120%_at_50%_0%,rgb(99_102_241_/_0.42)_0%,rgb(59_130_246_/_0.18)_32%,transparent_68%),linear-gradient(180deg,rgb(9_14_24)_0%,rgb(6_10_20)_100%)] px-7 py-12 text-center shadow-[0_30px_80px_-52px_rgb(99_102_241_/_0.55)] dark:border-white/[0.1] sm:mt-28 sm:px-10"
+        className="lx-glass-card relative mt-24 overflow-hidden rounded-3xl border border-slate-200/50 bg-white/70 backdrop-blur-md px-7 py-12 text-center shadow-[0_30px_80px_-52px_rgba(0,0,0,0.15)] dark:border-white/[0.08] dark:bg-slate-950/45 dark:shadow-[0_30px_80px_-52px_rgba(0,0,0,0.5)] sm:mt-28 sm:px-10"
       >
-        <div aria-hidden className="lx-stars-pan absolute inset-0 opacity-[0.42]" />
+        <div aria-hidden className="lx-stars-pan absolute inset-0 opacity-[0.25]" />
         <div
           aria-hidden
-          className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgb(255_255_255_/_0.10)_0%,transparent_52%)]"
+          className="absolute inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(255,255,255,0.03)_0%,transparent_52%)]"
         />
         <div className="relative z-[1] mx-auto max-w-2xl space-y-4">
-          <p className="mx-auto inline-flex items-center justify-center rounded-full border border-white/[0.14] bg-white/[0.06] px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-white/80">
+          <p className="mx-auto inline-flex items-center justify-center rounded-full border border-slate-200/60 bg-slate-50 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-600 dark:border-white/[0.14] dark:bg-white/[0.06] dark:text-white/80">
             {t("pricing.ctaPanelBadge")}
           </p>
-          <h3 className="text-2xl font-extrabold tracking-tight text-white sm:text-[2rem]">
+          <h3 className="text-2xl font-extrabold tracking-tight text-[#0f172a] dark:text-white sm:text-[2rem]">
             {t("pricing.ctaPanelTitle")}
           </h3>
-          <p className="text-sm leading-relaxed text-white/70">
+          <p className="text-sm leading-relaxed text-slate-600 dark:text-white/70">
             {t("pricing.ctaPanelSub")}
           </p>
           <motion.button

@@ -6,11 +6,8 @@ import { motion } from "framer-motion";
 import api from "../api/api";
 import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
-import { useStoreContext } from "../contextApi/ContextApi";
 import { fadeUpMountProps, tapScale } from "../utils/motionVariants";
 import { extractApiErrorMessage } from "../utils/apiError";
-import AmbientDarkBackground from "./AmbientDarkBackground";
-import AmbientLightBackground from "./AmbientLightBackground";
 import { ArrowLeft, CheckCircle2, ShieldCheck } from "lucide-react";
 
 const TOAST_REGISTER = "register-flow";
@@ -20,8 +17,6 @@ const RegisterPage = () => {
   const { t } = useTranslation();
   const [loader, setLoader] = useState(false);
   const submitLock = useRef(false);
-  const { theme } = useStoreContext();
-  const isDark = theme === "dark";
 
   const {
     register,
@@ -66,10 +61,7 @@ const RegisterPage = () => {
 
   return (
     <div className="relative flex min-h-screen w-full flex-col overflow-hidden lg:flex-row">
-      {/* Background Layer */}
-      <div className="absolute inset-0 -z-10">
-        {isDark ? <AmbientDarkBackground /> : <AmbientLightBackground />}
-      </div>
+
 
       {/* Left Column: Branding / Marketing (Visible on Desktop) */}
       <div className="relative hidden w-full flex-col justify-between overflow-hidden p-12 lg:flex lg:w-1/2 xl:p-16">
@@ -203,7 +195,7 @@ const RegisterPage = () => {
             </motion.div>
           </div>
 
-          <motion.div {...fadeUpMountProps(0.12)} className="lx-card p-8 sm:p-10">
+          <motion.div {...fadeUpMountProps(0.12)} className="lx-glass-card p-8 sm:p-10">
             <form onSubmit={handleSubmit(registerHandler)} className="space-y-6">
               <TextField
                 label={t("auth.username")}

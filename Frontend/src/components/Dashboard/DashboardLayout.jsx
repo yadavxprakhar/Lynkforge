@@ -14,7 +14,6 @@ import ShortenUrlList from "./ShortenUrlList";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Loader from "../Loader";
-import HomeSpaceBackground from "../HomeSpaceBackground";
 import { fadeUpMountProps, tapScale } from "../../utils/motionVariants";
 import toast from "react-hot-toast";
 import { extractApiErrorMessage } from "../../utils/apiError";
@@ -24,10 +23,9 @@ const fmt = (d) => dayjs(d).format("YYYY-MM-DD");
 
 const DashboardLayout = () => {
   const { t } = useTranslation();
-  const { token, theme } = useStoreContext();
+  const { token } = useStoreContext();
   const navigate = useNavigate();
   const [shortenPopUp, setShortenPopUp] = useState(false);
-  const isDark = theme === "dark";
 
   const [rangePreset, setRangePreset] = useState("30d"); // 7d | 30d | 90d | custom
   const [customStart, setCustomStart] = useState(fmt(dayjs().subtract(29, "day")));
@@ -67,6 +65,14 @@ const DashboardLayout = () => {
   const breakdownForbidden =
     breakdownErrored && breakdownError?.response?.status === 403;
 
+  const handleMouseMove = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    e.currentTarget.style.setProperty("--mouse-x", `${x}px`);
+    e.currentTarget.style.setProperty("--mouse-y", `${y}px`);
+  };
+
   const handleLinkDeleted = () => {
     refetchMyUrls();
     refetchAnalytics();
@@ -78,7 +84,6 @@ const DashboardLayout = () => {
 
   return (
     <div className="relative w-full">
-      {isDark ? <HomeSpaceBackground /> : null}
 
       <div className="lx-page-inner lx-dashboard-shell">
         {analyticsLoading ? (
@@ -92,7 +97,7 @@ const DashboardLayout = () => {
               {Array.from({ length: 4 }).map((_, i) => (
                 <div
                   key={i}
-                  className="lx-card p-5"
+                  className="lx-glass-card p-5"
                 >
                   <div className="h-3 w-24 rounded bg-slate-200/70 animate-pulse dark:bg-white/[0.08]" />
                   <div className="mt-3 h-8 w-28 rounded bg-slate-200/70 animate-pulse dark:bg-white/[0.08]" />
@@ -101,7 +106,7 @@ const DashboardLayout = () => {
               ))}
             </div>
 
-            <div className="lx-card relative min-h-[23rem] overflow-hidden p-5 sm:min-h-[25rem] sm:p-8">
+            <div className="lx-glass-card relative min-h-[23rem] overflow-hidden p-5 sm:min-h-[25rem] sm:p-8">
               <div className="h-full w-full rounded-2xl bg-slate-200/60 animate-pulse dark:bg-white/[0.06]" />
             </div>
 
@@ -206,7 +211,7 @@ const DashboardLayout = () => {
             ) : null}
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <div className="lx-card p-5">
+              <div className="lx-glow-card p-5" onMouseMove={handleMouseMove}>
                 <p className="text-xs font-bold uppercase tracking-[0.14em] text-lx-muted">
                   {t("dashboard.totalClicks")}
                 </p>
@@ -239,7 +244,7 @@ const DashboardLayout = () => {
                 </p>
               </div>
 
-              <div className="lx-card p-5">
+              <div className="lx-glow-card p-5" onMouseMove={handleMouseMove}>
                 <p className="text-xs font-bold uppercase tracking-[0.14em] text-lx-muted">
                   {t("dashboard.clicksToday")}
                 </p>
@@ -249,7 +254,7 @@ const DashboardLayout = () => {
                 <p className="mt-1 text-sm text-lx-muted">{t("dashboard.today")}</p>
               </div>
 
-              <div className="lx-card p-5">
+              <div className="lx-glow-card p-5" onMouseMove={handleMouseMove}>
                 <p className="text-xs font-bold uppercase tracking-[0.14em] text-lx-muted">
                   {t("dashboard.activeLinks")}
                 </p>
@@ -261,7 +266,7 @@ const DashboardLayout = () => {
                 </p>
               </div>
 
-              <div className="lx-card p-5">
+              <div className="lx-glow-card p-5" onMouseMove={handleMouseMove}>
                 <p className="text-xs font-bold uppercase tracking-[0.14em] text-lx-muted">
                   {t("dashboard.topLink")}
                 </p>
@@ -280,7 +285,7 @@ const DashboardLayout = () => {
           </motion.div>
 
           <motion.div {...fadeUpMountProps(0.08)} className="relative">
-            <div className="lx-card relative min-h-[23rem] overflow-hidden p-5 sm:min-h-[25rem] sm:p-8">
+            <div className="lx-glass-card relative min-h-[23rem] overflow-hidden p-5 sm:min-h-[25rem] sm:p-8">
               {(analytics?.graphData?.length ?? 0) === 0 && (
                 <div className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center px-6 text-center">
                   <p className="text-base font-semibold text-lx-foreground sm:text-lg">
@@ -296,7 +301,7 @@ const DashboardLayout = () => {
           </motion.div>
 
           <motion.div {...fadeUpMountProps(0.09)} className="grid gap-6 lg:grid-cols-2">
-            <div className="lx-card p-6">
+            <div className="lx-glass-card p-6">
               <div className="flex items-center justify-between gap-4">
                 <h2 className="text-sm font-extrabold tracking-tight text-lx-foreground">
                   {t("dashboard.topReferrers")}
@@ -359,7 +364,7 @@ const DashboardLayout = () => {
               )}
             </div>
 
-            <div className="lx-card p-6">
+            <div className="lx-glass-card p-6">
               <div className="flex items-center justify-between gap-4">
                 <h2 className="text-sm font-extrabold tracking-tight text-lx-foreground">
                   {t("dashboard.devices")}
@@ -429,7 +434,7 @@ const DashboardLayout = () => {
             {!isLoading && (myShortenUrls?.length ?? 0) === 0 ? (
               <motion.div
                 {...fadeUpMountProps(0.12)}
-                className="lx-card flex flex-col items-center justify-center gap-4 px-8 py-20 text-center"
+                className="lx-glass-card flex flex-col items-center justify-center gap-4 px-8 py-20 text-center"
               >
                 <Link2
                   className="size-9 text-blue-600 dark:text-blue-400"

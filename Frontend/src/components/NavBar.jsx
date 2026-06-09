@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, Moon, Sun, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useStoreContext } from "../contextApi/ContextApi";
-import { LightChromeAmbient, LightChromeFrost } from "./LightChromeStack";
+
 
 /** Same pattern as [portfolio Navbar](https://github.com/yadavxprakhar/portfolio-website/blob/main/components/layout/Navbar.tsx): spring layoutId pill + hover/tap scale. */
 const MotionLink = motion(Link);
@@ -34,7 +34,7 @@ const mobileItemVariants = {
 
 function navLinkTone(isActive) {
   return isActive
-    ? "relative z-10 font-semibold text-blue-600 dark:text-[#93c5fd]"
+    ? "relative z-10 font-semibold text-black dark:text-white"
     : "relative z-10 font-medium text-slate-600 transition-colors duration-200 hover:text-[#0f172a] dark:text-[#94a3b8] dark:hover:text-[#f8fafc]";
 }
 
@@ -44,14 +44,7 @@ const Navbar = () => {
   const { token, setToken, theme, toggleTheme } = useStoreContext();
   const path = useLocation().pathname;
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   const onLogOutHandler = () => {
     setToken(null);
@@ -75,28 +68,19 @@ const Navbar = () => {
     [token],
   );
 
-  const headerSurface = scrolled
-    ? "border-[#E2E8F0]/90 shadow-nav-scrolled dark:border-white/[0.08] dark:bg-[rgba(10,14,26,0.92)] dark:shadow-nav-scrolled-dark dark:backdrop-blur-2xl"
-    : "border-[#E2E8F0] shadow-none dark:border-white/[0.06] dark:bg-[rgba(10,14,26,0.88)] dark:backdrop-blur-xl";
 
-  const lightNavFrost =
-    scrolled
-      ? "bg-white/[0.76]"
-      : "bg-white/[0.58]";
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 overflow-hidden border-b bg-transparent transition-[box-shadow,border-color] duration-500 ease-out ${headerSurface}`}
+      className="lx-nav-dock"
     >
-      <LightChromeAmbient />
-      <LightChromeFrost className={lightNavFrost} />
-      <div className="relative z-[2] mx-auto flex min-h-[theme(spacing.navbar)] max-w-6xl items-center px-6 py-4 lg:px-8">
+      <div className="relative z-[2] mx-auto flex w-full items-center justify-between">
         {/* Logo — hover / tap spring like portfolio */}
         <MotionLink
           to="/"
           whileHover={{ scale: 1.045 }}
           whileTap={{ scale: 0.96 }}
-          className="group z-[1] flex min-w-0 shrink-0 items-center gap-3 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/55"
+          className="group z-[1] flex min-w-0 shrink-0 items-center gap-3 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-black/35 dark:focus-visible:ring-white/35"
           onClick={() => setOpen(false)}
         >
           <img
@@ -106,7 +90,7 @@ const Navbar = () => {
             width={40}
             height={40}
           />
-          <span className="truncate bg-gradient-to-r from-[#2563eb] to-[#7c3aed] bg-clip-text text-lg font-bold tracking-tight text-transparent dark:from-[#60a5fa] dark:to-[#a78bfa]">
+          <span className="truncate bg-gradient-to-r from-black via-slate-800 to-slate-600 bg-clip-text text-lg font-bold tracking-tight text-transparent dark:from-white dark:via-slate-200 dark:to-slate-400">
             Lynkforge
           </span>
         </MotionLink>
@@ -128,14 +112,14 @@ const Navbar = () => {
                     onClick={() => setOpen(false)}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className={`relative block rounded-full px-4 py-2 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/55 ${navLinkTone(active)}`}
+                    className={`relative block rounded-full px-4 py-2 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-black/35 dark:focus-visible:ring-white/35 ${navLinkTone(active)}`}
                   >
                     <span className="relative z-10">{label}</span>
                     <AnimatePresence>
                       {active && (
                         <motion.span
                           layoutId="lynkforge-nav-pill"
-                          className="absolute inset-0 z-0 rounded-full bg-blue-600/12 dark:bg-blue-500/16"
+                          className="absolute inset-0 z-0 rounded-full bg-black/10 dark:bg-white/12"
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           exit={{ opacity: 0 }}
@@ -162,40 +146,50 @@ const Navbar = () => {
             whileTap={{ scale: 0.94 }}
             transition={{ type: "spring", stiffness: 480, damping: 28 }}
             onClick={toggleTheme}
-            className="rounded-lg p-2.5 text-lx-muted outline-none ring-offset-white transition-colors duration-200 hover:bg-black/[0.04] hover:text-[#0f172a] focus-visible:ring-2 focus-visible:ring-blue-500/55 dark:hover:bg-white/[0.08] dark:hover:text-[#e2e8f0] dark:ring-offset-[#0f172a]"
+            className="relative overflow-hidden rounded-lg p-2.5 text-lx-muted outline-none ring-offset-white transition-colors duration-200 hover:bg-black/[0.04] hover:text-[#0f172a] focus-visible:ring-2 focus-visible:ring-black/35 dark:hover:bg-white/[0.08] dark:hover:text-[#e2e8f0] dark:ring-offset-[#0f172a]"
             aria-label={
               theme === "dark" ? t("aria.themeToLight") : t("aria.themeToDark")
             }
           >
-            {theme === "dark" ? (
-              <Sun className="size-[1.375rem]" aria-hidden />
-            ) : (
-              <Moon className="size-[1.375rem]" aria-hidden />
-            )}
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                key={theme}
+                initial={{ rotate: -90, opacity: 0, scale: 0.7 }}
+                animate={{ rotate: 0, opacity: 1, scale: 1 }}
+                exit={{ rotate: 90, opacity: 0, scale: 0.7 }}
+                transition={{ duration: 0.22, ease: "easeInOut" }}
+                className="flex"
+              >
+                {theme === "dark" ? (
+                  <Sun className="size-[1.375rem]" aria-hidden />
+                ) : (
+                  <Moon className="size-[1.375rem]" aria-hidden />
+                )}
+              </motion.span>
+            </AnimatePresence>
           </motion.button>
 
           {!token ? (
-            <MotionLink
-              to="/login"
-              whileHover={{ scale: 1.045 }}
-              whileTap={{ scale: 0.96 }}
-              className="lx-btn-nav-login hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/55 md:inline-flex"
-              onClick={() => setOpen(false)}
-            >
-              {t("auth.login")}
-            </MotionLink>
-          ) : null}
-
-          {!token ? (
-            <MotionLink
-              to="/register"
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.97 }}
-              className="lx-btn-primary hidden rounded-xl px-5 py-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/55 md:inline-flex"
-              onClick={() => setOpen(false)}
-            >
-              {t("auth.signup")}
-            </MotionLink>
+            <>
+              <MotionLink
+                to="/login"
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className="lx-btn-nav-login hidden focus:outline-none focus-visible:ring-2 focus-visible:ring-black/35 dark:focus-visible:ring-white/35 md:inline-flex"
+                onClick={() => setOpen(false)}
+              >
+                {t("auth.login")}
+              </MotionLink>
+              <MotionLink
+                to="/register"
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className="lx-btn-primary hidden rounded-xl px-5 py-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-black/35 dark:focus-visible:ring-white/35 md:inline-flex"
+                onClick={() => setOpen(false)}
+              >
+                {t("auth.signup")}
+              </MotionLink>
+            </>
           ) : (
             <motion.button
               type="button"
@@ -211,7 +205,7 @@ const Navbar = () => {
           <motion.button
             type="button"
             whileTap={{ scale: 0.94 }}
-            className="rounded-lg p-2.5 text-lx-muted outline-none transition-colors duration-200 hover:bg-black/[0.04] hover:text-[#0f172a] focus-visible:ring-2 focus-visible:ring-blue-500/55 dark:hover:bg-white/[0.08] md:hidden dark:hover:text-[#e2e8f0]"
+            className="rounded-lg p-2.5 text-lx-muted outline-none transition-colors duration-200 hover:bg-black/[0.04] hover:text-[#0f172a] focus-visible:ring-2 focus-visible:ring-black/35 dark:hover:bg-white/[0.08] md:hidden dark:hover:text-[#e2e8f0]"
             aria-expanded={open}
             aria-controls="mobile-menu"
             aria-label={open ? t("aria.closeMenu") : t("aria.openMenu")}
@@ -238,7 +232,7 @@ const Navbar = () => {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.26, ease: [0.4, 0, 0.2, 1] }}
-            className="relative z-[2] overflow-hidden border-t border-[#E2E8F0] dark:border-[#1F2937] md:hidden"
+            className="relative z-[2] overflow-hidden border-t border-slate-200/50 dark:border-white/[0.08] md:hidden rounded-b-2xl"
           >
             <div className="mx-auto flex max-w-6xl flex-col gap-1 px-6 py-5">
               <motion.nav
@@ -259,9 +253,9 @@ const Navbar = () => {
                         whileHover={{ scale: 1.01 }}
                         whileTap={{ scale: 0.985 }}
                         onClick={() => setOpen(false)}
-                        className={`block rounded-lg px-3 py-3 text-sm outline-none ring-offset-[#f8fafc] focus-visible:ring-2 focus-visible:ring-blue-500/55 dark:ring-offset-[#0f172a] ${
+                        className={`block rounded-lg px-3 py-3 text-sm outline-none ring-offset-[#f8fafc] focus-visible:ring-2 focus-visible:ring-black/35 dark:ring-offset-[#0f172a] ${
                           mobileActive
-                            ? "scale-[1.02] bg-blue-600/12 font-semibold text-blue-600 dark:bg-blue-400/14 dark:text-blue-400"
+                            ? "scale-[1.02] bg-black/10 font-semibold text-black dark:bg-white/12 dark:text-white"
                             : "font-medium text-lx-muted transition-colors hover:bg-black/[0.04] hover:text-[#0f172a] dark:hover:bg-white/[0.06] dark:hover:text-[#f1f5f9]"
                         }`}
                       >
