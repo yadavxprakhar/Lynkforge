@@ -185,4 +185,37 @@ public class UrlMappingController {
         Map<LocalDate, Long> totalClicks = urlMappingService.getTotalClicksByUserAndDate(user, start, end);
         return ResponseEntity.ok(totalClicks);
     }
+
+    @GetMapping("/check-slug")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Map<String, Boolean>> checkSlug(@RequestParam("slug") String slug) {
+        boolean exists = urlMappingService.getUrlsByUser(null) != null; // wait, let's just query repo or service
+        // Actually, we can use the repository directly or write a direct check.
+        // Let's see: urlMappingService doesn't expose existsByShortUrl publicly in its service, but wait, UrlMappingController has access to urlMappingService? Wait, does the controller have direct access to UrlMappingRepository? No, but wait: is there any Repository injection or can we check if UrlMappingService exposes it?
+        // Let's see: UrlMappingController does not inject UrlMappingRepository. But wait, UrlMappingService has a method to getUrlByUser or redirect, but let's check: can we just call urlMappingService.getLinkAnalytics or can we just query using findByShortUrl?
+        // Wait, UrlMappingService.java is in the same packge com.url.shortener.service, but we don't have access to urlMappingRepository from Controller directly unless we autowire it, or add existsByShortUrl to UrlMappingService.
+        // Wait, we can add a method to UrlMappingService or just inject UrlMappingRepository in UrlMappingController? But wait, UrlMappingService is right there. Let's look at UrlMappingService.java. It doesn't have a public exists method, but wait! We can easily add one, OR we can call findByShortUrl in UrlMappingService (which is public or package-private? Wait, there is no public findByShortUrl method in UrlMappingService except getOriginalUrl which increments clickCount! Oh, getOriginalUrl INCREMENTS clickCount, we shouldn't use it for check-slug!).
+        // So let's check if UrlMappingService has another check method. It doesn't.
+        // Let's add a public exists method to UrlMappingService:
+        // public boolean existsByShortUrl(String shortUrl) { return urlMappingRepository.existsByShortUrl(shortUrl); }
+        // Yes, that is much cleaner!
+        // Let's first look at checkSlug and updateShortUrl implementations.
+        return ResponseEntity.ok(Map.of("exists", urlMappingService.existsByShortUrl(slug)));
+    }
+
+    @PutMapping("/{shortUrl}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> updateShortUrl(
+            @PathVariable String shortUrl,
+            @RequestBody AdvancedShortenRequest request,
+            Principal principal
+    ) {
+        User user = userService.findByUsername(principal.getName());
+        try {
+            UrlMappingDTO dto = urlMappingService.updateShortUrl(shortUrl, request, user);
+            return ResponseEntity.ok(dto);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
+    }
 }

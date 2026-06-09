@@ -373,6 +373,45 @@ public class UrlMappingService {
         return needsQuotes ? "\"" + v + "\"" : v;
     }
 
+    public UrlMappingDTO updateShortUrl(String shortUrl, AdvancedShortenRequest request, User user) {
+        UrlMapping mapping = urlMappingRepository.findByShortUrl(shortUrl);
+        if (mapping == null) {
+            throw new IllegalArgumentException("Link not found");
+        }
+        if (mapping.getUser() == null || !mapping.getUser().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("Forbidden");
+        }
+
+        String newAlias = request.getCustomAlias();
+        if (newAlias != null && !newAlias.trim().isEmpty() && !newAlias.equals(shortUrl)) {
+            String trimmed = newAlias.trim();
+            if (!trimmed.matches("^[A-Za-z0-9_-]{3,32}$")) {
+                throw new IllegalArgumentException("customAlias must be 3-32 chars: letters, numbers, _ or -");
+            }
+            if (urlMappingRepository.existsByShortUrl(trimmed)) {
+                throw new IllegalArgumentException("customAlias already in use");
+            }
+            mapping.setShortUrl(trimmed);
+        }
+
+        mapping.setOriginalUrl(request.getOriginalUrl().trim());
+        mapping.setExpiresAt(request.getExpiresAt());
+
+        if (request.getPassword() != null && !request.getPassword().trim().isEmpty()) {
+            mapping.setPasswordHash(passwordEncoder.encode(request.getPassword()));
+        } else if (request.getPassword() == null || request.getPassword().trim().isEmpty()) {
+            mapping.setPasswordHash(null);
+        }
+
+        UrlMapping saved = urlMappingRepository.save(mapping);
+        return convertToDto(saved);
+    }
+
+    public boolean existsByShortUrl(String shortUrl) {
+        if (shortUrl == null || shortUrl.trim().isEmpty()) return false;
+        return urlMappingRepository.existsByShortUrl(shortUrl.trim());
+    }
+
     public boolean verifyPassword(UrlMapping mapping, String password) {
         if (mapping.getPasswordHash() == null) return true;
         if (password == null) return false;

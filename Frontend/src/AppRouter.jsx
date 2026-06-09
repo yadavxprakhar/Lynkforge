@@ -5,31 +5,25 @@ import ShortenUrlPage from "./components/ShortenUrlPage";
 import { Toaster } from "react-hot-toast";
 import Footer from "./components/Footer";
 import LandingPage from "./components/LandingPage";
+import LoginPage from "./components/LoginPage";
+import SignupPage from "./components/SignupPage";
+import DashboardLayout from "./components/Dashboard/DashboardLayout";
+import DashboardHome from "./components/Dashboard/DashboardHome";
+import CreateLinkPage from "./components/Dashboard/CreateLinkPage";
+import EditLinkPage from "./components/Dashboard/EditLinkPage";
+import AnalyticsPage from "./components/Dashboard/AnalyticsPage";
+import PrivateRoute from "./PrivateRoute";
+import ErrorPage from "./components/ErrorPage";
 import AboutPage from "./components/AboutPage";
 import PrivacyPage from "./components/PrivacyPage";
 import TermsPage from "./components/TermsPage";
-import CookiePage from "./components/CookiePage";
-import AccessibilityPage from "./components/AccessibilityPage";
-import PrivacyManagerPage from "./components/PrivacyManagerPage";
-import RegisterPage from "./components/RegisterPage";
-import LoginPage from "./components/LoginPage";
-import DashboardLayout from "./components/Dashboard/DashboardLayout";
-import PrivateRoute from "./PrivateRoute";
-import ErrorPage from "./components/ErrorPage";
-import { useStoreContext } from "./contextApi/ContextApi";
-import PageFade from "./components/PageFade";
-import FluidMotionBackground from "./components/FluidMotionBackground";
-
-const shellSurface = (dark) =>
-  dark
-    ? "relative overflow-x-hidden min-h-screen flex flex-col bg-transparent text-lx-foreground motion-safe:transition-[color] motion-safe:duration-[480ms] motion-safe:ease-out"
-    : "relative overflow-x-hidden flex min-h-screen flex-col bg-transparent text-lx-foreground motion-safe:transition-colors motion-safe:duration-[480ms] motion-safe:ease-out";
 
 const AppRouter = () => {
   const { pathname, hash } = useLocation();
-  const { theme } = useStoreContext();
-  const hideHeaderFooter = pathname.startsWith("/s");
-  const isDark = theme === "dark";
+  
+  // Header and footer are hidden inside dashboard content to let the dashboard use its fixed sidebar layout cleanly.
+  const isDashboard = pathname.startsWith("/dashboard");
+  const isRedirect = pathname.startsWith("/s/");
 
   useEffect(() => {
     if (!hash) {
@@ -42,152 +36,80 @@ const AppRouter = () => {
   }, [pathname, hash]);
 
   return (
-    <div className={shellSurface(isDark)}>
-      <FluidMotionBackground />
-      {!hideHeaderFooter && (
-        <>
-          <Navbar />
-          <div aria-hidden className="h-[theme(spacing.navbar)]" />
-        </>
-      )}
+    <div className="relative min-h-screen flex flex-col bg-[#080808] text-white selection:bg-[#4DFFB4]/30 selection:text-white">
+      {!isDashboard && !isRedirect && <Navbar />}
+      
       <Toaster
         position="bottom-center"
         toastOptions={{
           style: {
-            background: isDark ? "var(--lx-elevated)" : "var(--lx-surface)",
-            color: "var(--lx-text-primary)",
-            border: "1px solid var(--lx-border)",
-            borderRadius: "0.75rem",
-            boxShadow: isDark
-              ? "0 4px 24px -4px rgb(0 0 0 / 0.35)"
-              : "0 10px 40px -14px rgb(15 23 42 / 0.12), 0 4px 12px -10px rgb(37 99 235 / 0.08)",
-            transitionProperty: "background-color,color,box-shadow",
-            transitionDuration: "0.35s",
+            background: "#141414",
+            color: "#FFFFFF",
+            border: "1px solid rgba(255, 255, 255, 0.07)",
+            borderRadius: "0.5rem",
+            fontSize: "14px",
+            fontFamily: "Inter, sans-serif",
           },
           success: {
             iconTheme: {
-              primary: isDark ? "#34d399" : "#059669",
-              secondary: isDark ? "var(--lx-elevated)" : "var(--lx-surface)",
+              primary: "#4DFFB4",
+              secondary: "#080808",
             },
           },
           error: {
             iconTheme: {
-              primary: isDark ? "#f87171" : "#dc2626",
-              secondary: isDark ? "var(--lx-elevated)" : "var(--lx-surface)",
+              primary: "#FF4D4D",
+              secondary: "#080808",
             },
           },
         }}
       />
-      <main className="relative z-[1] flex-1 motion-safe:transition-[background-color,color] motion-safe:duration-[480ms]">
+      
+      <main className="flex-1 flex flex-col">
         <Routes>
-          <Route
-            path="/"
-            element={
-              <PageFade>
-                <LandingPage />
-              </PageFade>
-            }
-          />
-          <Route
-            path="/about"
-            element={
-              <PageFade>
-                <AboutPage />
-              </PageFade>
-            }
-          />
-          <Route
-            path="/privacy"
-            element={
-              <PageFade>
-                <PrivacyPage />
-              </PageFade>
-            }
-          />
-          <Route
-            path="/terms"
-            element={
-              <PageFade>
-                <TermsPage />
-              </PageFade>
-            }
-          />
-          <Route
-            path="/cookie"
-            element={
-              <PageFade>
-                <CookiePage />
-              </PageFade>
-            }
-          />
-          <Route
-            path="/accessibility"
-            element={
-              <PageFade>
-                <AccessibilityPage />
-              </PageFade>
-            }
-          />
-          <Route
-            path="/privacy-manager"
-            element={
-              <PageFade>
-                <PrivacyManagerPage />
-              </PageFade>
-            }
-          />
-          <Route path="/s/:url" element={<ShortenUrlPage />} />
-
-          <Route
-            path="/register"
-            element={
-              <PrivateRoute publicPage={true}>
-                <PageFade>
-                  <RegisterPage />
-                </PageFade>
-              </PrivateRoute>
-            }
-          />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+          
           <Route
             path="/login"
             element={
               <PrivateRoute publicPage={true}>
-                <PageFade>
-                  <LoginPage />
-                </PageFade>
+                <LoginPage />
               </PrivateRoute>
             }
           />
-
+          <Route
+            path="/signup"
+            element={
+              <PrivateRoute publicPage={true}>
+                <SignupPage />
+              </PrivateRoute>
+            }
+          />
+          
           <Route
             path="/dashboard"
             element={
               <PrivateRoute publicPage={false}>
-                <PageFade>
-                  <DashboardLayout />
-                </PageFade>
+                <DashboardLayout />
               </PrivateRoute>
             }
-          />
-          <Route
-            path="/error"
-            element={
-              <PageFade>
-                <ErrorPage />
-              </PageFade>
-            }
-          />
-          <Route
-            path="*"
-            element={
-              <PageFade>
-                <ErrorPage variant="notFound" />
-              </PageFade>
-            }
-          />
+          >
+            <Route index element={<DashboardHome />} />
+            <Route path="create" element={<CreateLinkPage />} />
+            <Route path="edit/:id" element={<EditLinkPage />} />
+            <Route path="analytics/:id" element={<AnalyticsPage />} />
+          </Route>
+          
+          <Route path="/s/:url" element={<ShortenUrlPage />} />
+          <Route path="/error" element={<ErrorPage />} />
+          <Route path="*" element={<ErrorPage variant="notFound" />} />
         </Routes>
       </main>
-      {!hideHeaderFooter && <Footer />}
+      
+      {!isDashboard && !isRedirect && <Footer />}
     </div>
   );
 };
@@ -195,17 +117,11 @@ const AppRouter = () => {
 export default AppRouter;
 
 export const SubDomainRouter = () => {
-  const { theme } = useStoreContext();
-  const isDark = theme === "dark";
-
   return (
-    <div className={shellSurface(isDark)}>
-      <FluidMotionBackground />
-      <div className="relative z-[1] flex min-h-screen flex-col">
-        <Routes>
-          <Route path="/:url" element={<ShortenUrlPage />} />
-        </Routes>
-      </div>
+    <div className="relative min-h-screen flex flex-col bg-[#080808] text-white">
+      <Routes>
+        <Route path="/:url" element={<ShortenUrlPage />} />
+      </Routes>
     </div>
   );
 };

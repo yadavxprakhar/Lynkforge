@@ -8,22 +8,35 @@ export default {
         navbar: "4.75rem",
       },
       fontFamily: {
-        sans: ["Inter", "system-ui", "-apple-system", "sans-serif"],
-        display: ["Inter Tight", "sans-serif"],
+        sans: ["Inter", "sans-serif"],
+        display: ["Syne", "sans-serif"],
+        mono: ["JetBrains Mono", "monospace"],
       },
       colors: {
-        lx: {
-          page: "var(--lx-page)",
-          surface: "var(--lx-surface)",
-          elevated: "var(--lx-elevated)",
-          border: "var(--lx-border)",
-          muted: "var(--lx-text-secondary)",
-          foreground: "var(--lx-text-primary)",
+        bg: {
+          base: "#080808",
+          secondary: "#0F0F0F",
+          surface: "#141414",
+          elevated: "#1A1A1A",
         },
-        brand: {
-          blue: "#2563eb",
-          indigo: "#4f46e5",
+        accent: {
+          DEFAULT: "#4DFFB4",
+          hover: "#3DE8A0",
+          dim: "rgba(77,255,180,0.12)",
+          border: "rgba(77,255,180,0.25)",
         },
+        text: {
+          primary: "#FFFFFF",
+          secondary: "#A0A0A0",
+          muted: "#525252",
+        },
+        border: {
+          default: "rgba(255,255,255,0.07)",
+          accent: "rgba(77,255,180,0.25)",
+        },
+        divider: "rgba(255,255,255,0.06)",
+        danger: "#FF4D4D",
+        warning: "#FFB84D",
       },
       backgroundImage: {
         brand: "linear-gradient(135deg, #2563eb 0%, #4f46e5 100%)",
