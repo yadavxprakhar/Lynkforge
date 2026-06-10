@@ -8,6 +8,7 @@ import com.url.shortener.dtos.KeyCountDTO;
 import com.url.shortener.dtos.LinkAnalyticsDTO;
 import com.url.shortener.dtos.TopLinkDTO;
 import com.url.shortener.dtos.UrlMappingDTO;
+import com.url.shortener.dtos.AdvancedShortenRequest;
 import com.url.shortener.models.ClickEvent;
 import com.url.shortener.models.UrlMapping;
 import com.url.shortener.models.User;
